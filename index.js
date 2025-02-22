@@ -93,6 +93,25 @@ async function run() {
       res.send(result);
     });
 
+    app.delete("/tasks/:id", async (req, res) => {
+      const { id } = req.params;
+
+      try {
+        const filter = { _id: new ObjectId(id) };
+        const result = await tasksCollection.deleteOne(filter);
+
+        if (result.deletedCount === 1) {
+          res.send({ success: true, message: "Task deleted successfully" });
+        } else {
+          res.status(404).send({ success: false, message: "Task not found" });
+        }
+      } catch (error) {
+        res
+          .status(500)
+          .send({ success: false, message: "Internal server error" });
+      }
+    });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     // console.log(
