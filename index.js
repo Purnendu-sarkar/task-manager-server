@@ -28,7 +28,8 @@ async function run() {
     // await client.connect();
     console.log("✅ MongoDB Connected Successfully");
 
-    
+    const usersCollection = client.db("TaskManager").collection("users");
+    const tasksCollection = client.db("TaskManager").collection("tasks");
 
     // jwt related api
     app.post("/jwt", async (req, res) => {
@@ -54,8 +55,20 @@ async function run() {
         next();
       });
     };
+    //user related Api
+    app.post("/users", async (req, res) => {
+      const user = req.body;
 
-    
+      // Insert email if user doesn't exists:
+      const query = { email: user.email };
+      const existingUser = await usersCollection.findOne(query);
+      if (existingUser) {
+        return res.send({ message: "User already exists", insertedId: null });
+      }
+
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
