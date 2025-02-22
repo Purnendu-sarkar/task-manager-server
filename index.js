@@ -82,6 +82,17 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/tasks/:id", async (req, res) => {
+      const { id } = req.params;
+      const { category } = req.body;
+
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = { $set: { category } };
+      const result = await tasksCollection.updateOne(filter, updateDoc);
+
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     // console.log(
