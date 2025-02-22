@@ -76,6 +76,20 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/tasks/:id", async (req, res) => {
+      const { id } = req.params;
+      try {
+        const query = { _id: new ObjectId(id) };
+        const task = await tasksCollection.findOne(query);
+        if (!task) {
+          return res.status(404).send({ message: "Task not found" });
+        }
+        res.send(task);
+      } catch (error) {
+        res.status(500).send({ message: "Internal server error" });
+      }
+    });
+
     app.post("/tasks", verifyToken, async (req, res) => {
       const camp = req.body;
       const result = await tasksCollection.insertOne(camp);
