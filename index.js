@@ -71,6 +71,11 @@ async function run() {
     });
 
     //Task related Api
+    app.get("/tasks", async (req, res) => {
+      const result = await tasksCollection.find().toArray();
+      res.send(result);
+    });
+
     app.post("/tasks", verifyToken, async (req, res) => {
       const camp = req.body;
       const result = await tasksCollection.insertOne(camp);
