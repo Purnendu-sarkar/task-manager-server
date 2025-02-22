@@ -70,6 +70,13 @@ async function run() {
       res.send(result);
     });
 
+    //Task related Api
+    app.post("/tasks", verifyToken, async (req, res) => {
+      const camp = req.body;
+      const result = await tasksCollection.insertOne(camp);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     // console.log(
